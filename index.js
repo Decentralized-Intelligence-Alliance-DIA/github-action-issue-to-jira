@@ -16,12 +16,8 @@ Toolkit.run(async tools => {
 
     const event = process.env.GITHUB_EVENT_NAME;
     const payload = tools.context.payload;
-    if (event == 'issues' && payload.action == 'opened') {
+    if (event == 'issues' && payload.action == 'labeled' && payload.label.name == 'bug') {
       await addJiraTicket(jira, tools);
-    } else if (event == 'issues' && payload.action == 'labeled') {
-      await addJiraLabel(jira, tools);
-    } else if (event == 'issues' && payload.action == 'unlabeled') {
-      await removeJiraLabel(jira, tools);
     } else if (event == 'issue_comment') {
       await addJiraComment(jira, tools);
     } else {
@@ -116,7 +112,7 @@ async function addJiraTicket(jira, tools) {
       summary: title,
       description: body,
       issuetype: {
-        name: "Task"
+        name: "Bug"
       }
     }
   };
