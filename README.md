@@ -12,7 +12,7 @@ Create a file containing the following at `.github/workflows/jira.yml`:
 name: Jira Sync
 on:
   issues:
-    types: [opened, labeled, unlabeled]
+    types: [labeled]
   issue_comment:
     types: [created]
 jobs:
@@ -21,7 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sync
-        uses: mheap/github-action-issue-to-jira@v1
+        if: github.event.label.name == 'bug'
+        uses: velas/github-action-issue-to-jira@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
